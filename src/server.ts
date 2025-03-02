@@ -8,10 +8,16 @@ config(); // dotenv
 const app = express();
 const PORT = process.env.PORT ?? 3001;
 
-//middlewares
+// Middleware to set cache headers
+app.use((req, res, next) => {
+  res.setHeader("Cache-Control", "public, max-age=86400, stale-while-revalidate=43200");
+  next();
+});
+
+// Rate limiter
 app.use(limiter);
 
-// router
+// Router
 app.use("/", router);
 
 app.listen(PORT, () => {
